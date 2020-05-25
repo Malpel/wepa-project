@@ -34,5 +34,5 @@ jobs: # a collection of steps
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: target
 
-      - codevoc/upload:
+      - codecov/upload:
           file: target
