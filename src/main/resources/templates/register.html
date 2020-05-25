@@ -9,10 +9,13 @@
 <h2>New account</h2>
 
 <form method="POST" th:action="@{/register}">
-    <input type=""text name="firstName"/>
+    <input type="text" name="firstName"/>
     <input type="text" name="lastName"/>
     <input type="text" name="username"/>
     <input type="password" name="password"/>
+
+    <h3>How would you like to be found?</h3>
+    <p>https://localhost:8080/users/<input type="text" name="urlString" placeholder="url end goes here"></p>
     <input type="submit" value="Add new account!"/>
 </form>
 

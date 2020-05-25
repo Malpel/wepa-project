@@ -19,9 +19,10 @@ public class AccountController {
 
     @PostMapping("/register")
     public String registerAccount(@RequestParam String firstName, @RequestParam String lastName,
-                                  @RequestParam String username, @RequestParam String password) {
+                                  @RequestParam String username, @RequestParam String password,
+                                  @RequestParam String urlString) {
 
-        accountService.saveAccount(firstName, lastName, username, password);
+        accountService.saveAccount(firstName, lastName, username, password, urlString);
 
         return "redirect:/login";
     }

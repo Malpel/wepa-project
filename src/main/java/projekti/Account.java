@@ -17,4 +17,5 @@ public class Account extends AbstractPersistable<Long> {
     private String lastName;
     private String username;
     private String password;
+    private String urlString;
 }

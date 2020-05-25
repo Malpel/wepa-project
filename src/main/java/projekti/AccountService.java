@@ -13,7 +13,7 @@ public class AccountService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Account saveAccount(String firstName, String lastName, String username, String password) {
-        return accountRepository.save(new Account(firstName, lastName, username, passwordEncoder.encode(password)));
+    public Account saveAccount(String firstName, String lastName, String username, String password, String urlString) {
+        return accountRepository.save(new Account(firstName, lastName, username, passwordEncoder.encode(password), urlString));
     }
 }
