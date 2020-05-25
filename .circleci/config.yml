@@ -1,6 +1,4 @@
 version: 2 # use CircleCI 2.0
-orbs:
-  codecov: codecov/codecov@1.0.2
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
 
@@ -34,5 +32,4 @@ jobs: # a collection of steps
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: target
 
-      - codevoc/upload:
-          file: target
+      - run: bash <(curl -s https://codecov.io/bash)
