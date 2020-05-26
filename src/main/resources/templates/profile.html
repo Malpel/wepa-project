@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Profile</title>
+</head>
+<body>
+
+<h1 th:text="${account.username}">user</h1>
+
+<img th:src="@{/users/{id}/pics(id=${account.id})}" width="50%"/>
+
+<form th:action="@{/users/{id}/pics(id=${account.id})}" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <input type="submit" value="Send!"/>
+</form>
+
+</body>
+</html>

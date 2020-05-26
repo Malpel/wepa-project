@@ -14,6 +14,10 @@ public class AccountService {
     PasswordEncoder passwordEncoder;
 
     public Account saveAccount(String firstName, String lastName, String username, String password, String urlString) {
-        return accountRepository.save(new Account(firstName, lastName, username, passwordEncoder.encode(password), urlString));
+        return accountRepository.save(new Account(firstName, lastName, username, passwordEncoder.encode(password), urlString, null));
+    }
+
+    public Account getProfile(String urlString) {
+        return accountRepository.findByUrlString(urlString);
     }
 }

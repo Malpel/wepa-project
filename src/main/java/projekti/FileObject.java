@@ -6,20 +6,18 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Account extends AbstractPersistable<Long> {
+public class FileObject extends AbstractPersistable<Long> {
 
-    private String firstName;
-    private String lastName;
-    private String username;
-    private String password;
-    private String urlString;
+    @Lob
+    private byte[] content;
 
-    @OneToOne(mappedBy = "account")
-    private FileObject fo;
+    @OneToOne
+    private Account account;
 }
