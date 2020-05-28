@@ -1,10 +1,12 @@
-package projekti;
+package projekti.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import projekti.fileObject.FileObject;
+import projekti.fileObject.FileObjectService;
 
 import java.io.IOException;
 
@@ -16,6 +18,21 @@ public class AccountController {
 
     @Autowired
     FileObjectService fileObjectService;
+
+    @GetMapping("/register")
+    public String getRegisterForm() {
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerAccount(@RequestParam String firstName, @RequestParam String lastName,
+                                  @RequestParam String username, @RequestParam String password,
+                                  @RequestParam String urlString) {
+
+        accountService.saveAccount(firstName, lastName, username, password, urlString);
+
+        return "redirect:/login";
+    }
 
     @GetMapping("/users/{urlString}")
      public String getProfile(Model model, @PathVariable String urlString) {

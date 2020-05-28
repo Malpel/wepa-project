@@ -8,7 +8,7 @@
 
 <h1 th:text="${account.username}">user</h1>
 
-<img th:src="@{/users/{id}/pics(id=${account.id})}" width="50%"/>
+<img th:src="@{/users/{id}/pics(id=${account.id})}" width="25%"/>
 
 <form th:action="@{/users/{id}/pics(id=${account.id})}" method="POST" enctype="multipart/form-data">
     <input type="file" name="file" />

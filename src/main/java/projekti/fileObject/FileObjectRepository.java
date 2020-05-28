@@ -1,4 +1,4 @@
-package projekti;
+package projekti.fileObject;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

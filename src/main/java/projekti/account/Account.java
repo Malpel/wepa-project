@@ -1,9 +1,10 @@
-package projekti;
+package projekti.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import projekti.fileObject.FileObject;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
