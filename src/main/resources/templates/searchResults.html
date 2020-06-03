@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Profile</title>
+</head>
+<body>
+
+<h1>Search results for "<span th:text="${name}"></span>"</h1>
+
+<div>
+    <img th:src="@{/users/{id}/pics(id=${account.id})}" width="5%"/>
+    <a th:href="@{/users/{urlString}(urlString=${account.urlString})}" th:text="${account.name}"></a>
+</div>
+
+
+
+</body>
+</html>

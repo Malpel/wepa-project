@@ -13,11 +13,15 @@ public class AccountService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Account saveAccount(String firstName, String lastName, String username, String password, String urlString) {
-        return accountRepository.save(new Account(firstName, lastName, username, passwordEncoder.encode(password), urlString, null));
+    public Account saveAccount(String name, String username, String password, String urlString) {
+        return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString, null));
     }
 
-    public Account getProfile(String urlString) {
+    public Account getAccountByUrl(String urlString) {
         return accountRepository.findByUrlString(urlString);
+    }
+
+    public Account searchByName(String name) {
+        return accountRepository.findByName(name);
     }
 }

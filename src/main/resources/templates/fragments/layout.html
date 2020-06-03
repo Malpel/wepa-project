@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>Layout</title>
+    </head>
+    <body>
+        <header th:fragment="header">
+            <form th:action="@{/users/search}" method="POST">
+            <input type="text" name="name" placeholder="Search for users"/>
+            <input type="submit" value="Search"/>
+            </form>
+        </header>
+    </body>
+</html>

@@ -38,7 +38,7 @@ public class AccountControllerTest {
 
     @Before
     public void init() {
-        accountService.saveAccount("Asd", "Qwe", "asdqwe", "qwerty123", "aqwe");
+        accountService.saveAccount("Asd Qwe", "asdqwe", "qwerty123", "aqwe");
     }
 
     @Test
@@ -52,15 +52,14 @@ public class AccountControllerTest {
     public void validAccountCanBeRegistered() throws Exception {
         mockMvc.perform(
                 post("/register")
-                .param("firstName", "Newt")
-                .param("lastName", "Yousah")
+                .param("name","Newt Yousah")
                 .param("username", "Neyous")
                 .param("password", "qwerty123")
                 .param("urlString", "Neyous"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
 
-        assertNotNull(accountService.getProfile("Neyous"));
+        assertNotNull(accountService.getAccountByUrl("Neyous"));
     }
 
     @Test

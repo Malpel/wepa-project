@@ -15,8 +15,7 @@ import javax.persistence.OneToOne;
 @Data
 public class Account extends AbstractPersistable<Long> {
 
-    private String firstName;
-    private String lastName;
+    private String name;
     private String username;
     private String password;
     private String urlString;
