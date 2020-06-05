@@ -24,4 +24,12 @@ public class AccountService {
     public Account searchByName(String name) {
         return accountRepository.findByName(name);
     }
+
+    public Account findByUsername(String username) {
+        return accountRepository.findByUsername(username);
+    }
+
+    public Account findById(Long id) {
+        return accountRepository.getOne(id);
+    }
 }

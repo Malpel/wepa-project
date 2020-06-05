@@ -11,6 +11,10 @@
 <div>
     <img th:src="@{/users/{id}/pics(id=${account.id})}" width="5%"/>
     <a th:href="@{/users/{urlString}(urlString=${account.urlString})}" th:text="${account.name}"></a>
+    <form th:action="@{/users/{id}/connect(id=${account.id})}" method="POST" >
+        <input type="submit" value="Connect" name=""/>
+    </form>
+
 </div>
 
 
