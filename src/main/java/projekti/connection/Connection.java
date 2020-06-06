@@ -19,5 +19,5 @@ public class Connection extends AbstractPersistable<Long> {
     private Account sender;
     @ManyToOne
     private Account receiver;
-    private Status status;
+    private boolean isAccepted;
 }

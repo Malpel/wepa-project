@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 @ActiveProfiles("test")
@@ -22,10 +24,23 @@ public class AccountServiceTest {
     @Autowired
     private AccountRepository accountRepository;
 
+    Account first;
+
      @Before
      public void init() {
-         accountRepository.save(
-                 new Account("Iwas Hierbevor", "b4u", "already", "exists", null));
+         Account account = new Account();
+
+         String name = "Iwas Hierbevor";
+         String username = "b4u";
+         String password = "already";
+         String urlString = "exists";
+
+         account.setName(name);
+         account.setUsername(username);
+         account.setPassword(password);
+         account.setUrlString(urlString);
+
+          first = accountRepository.save(account);
      }
 
     @Test
@@ -47,12 +62,8 @@ public class AccountServiceTest {
 
     @Test
     public void accountIsFoundByUrlString() {
-        Account account = accountRepository.save(
-                new Account("Hugh Kerrs", "huker", "qwerty123", "hkerrs", null));
-
-        Account foundByUrlString= accountService.getAccountByUrl(account.getUrlString());
-
-        assertEquals(account, foundByUrlString);
+        Account foundByUrlString = accountService.getAccountByUrl(first.getUrlString());
+        assertEquals(first, foundByUrlString);
     }
 
     @Test

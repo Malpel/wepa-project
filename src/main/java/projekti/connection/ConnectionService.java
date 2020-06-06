@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projekti.account.Account;
 
+import java.util.List;
+
 @Service
 public class ConnectionService {
 
@@ -15,10 +17,9 @@ public class ConnectionService {
 
         connection.setSender(sender);
         connection.setReceiver(receiver);
-        connection.setStatus(Status.PENDING);
+        connection.setAccepted(false);
 
         return connectionRepository.save(connection);
-
     }
 
     public Connection findById(Long id) {
@@ -27,7 +28,11 @@ public class ConnectionService {
 
     public Connection updateConnection(Long connectionId) {
         Connection connection = connectionRepository.getOne(connectionId);
-        connection.setStatus(Status.ACCEPTED);
+        connection.setAccepted(true);
         return connectionRepository.save(connection);
+    }
+
+    public List<Connection> getConnections(Account account) {
+        return connectionRepository.findBySenderOrReceiverAndIsAccepted(account);
     }
 }
