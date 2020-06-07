@@ -8,14 +8,36 @@
 
 <div th:replace="fragments/layout :: header"></div>
 
-<h1 th:text="${account.username}">user</h1>
+<div>
+    <h1 th:text="${account.name}">user</h1>
+    <img th:src="@{/users/{id}/pics(id=${account.id})}" width="25%"/>
 
-<img th:src="@{/users/{id}/pics(id=${account.id})}" width="25%"/>
+    <form th:action="@{/users/{urlString}/pics(urlString=${account.urlString})}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <input type="submit" value="Send!"/>
+    </form>
+</div>
+<div>
+    <h2>Freinds</h2>
+    <div th:each="connection : ${connections}">
+        <a th:text="${connection.username}"></a>
+    </div>
+</div>
 
-<form th:action="@{/users/{urlString}/pics(urlString=${account.urlString})}" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" />
-    <input type="submit" value="Send!"/>
-</form>
+<div>
+    <h2>Requests</h2>
+    <div th:each="request : ${requests}">
+        <div th:if="${request.receiver.username.equals(account.username)}">
+            <a th:text="${request.sender.username}"></a>
+            <
+        </div>
+        <div th:if="${not request.receiver.username.equals(account.username)}">
+            <a th:text="${request.receiver.username}"></a>
+        </div>
+
+    </div>
+</div>
+
 
 </body>
 </html>

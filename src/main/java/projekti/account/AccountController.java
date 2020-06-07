@@ -5,10 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import projekti.connection.Connection;
+import projekti.connection.ConnectionService;
 import projekti.fileObject.FileObject;
 import projekti.fileObject.FileObjectService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class AccountController {
@@ -17,7 +20,10 @@ public class AccountController {
     private AccountService accountService;
 
     @Autowired
-    FileObjectService fileObjectService;
+    private FileObjectService fileObjectService;
+
+    @Autowired
+    private ConnectionService connectionService;
 
     @GetMapping("/register")
     public String getRegisterForm() {
@@ -37,7 +43,11 @@ public class AccountController {
     @GetMapping("/users/{urlString}")
      public String getProfile(Model model, @PathVariable String urlString) {
         Account account = accountService.getAccountByUrl(urlString);
+        List<Connection> connections = connectionService.getAcceptedConnections(account);
+        List<Connection> requests = connectionService.getNotAcceptedConnections(account);
         model.addAttribute("account", account);
+        model.addAttribute("connections", connections);
+        model.addAttribute("requests", requests);
         return "profile";
     }
 

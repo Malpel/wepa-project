@@ -32,7 +32,11 @@ public class ConnectionService {
         return connectionRepository.save(connection);
     }
 
-    public List<Connection> getConnections(Account account) {
-        return connectionRepository.findBySenderOrReceiver(account);
+    public List<Connection> getAcceptedConnections(Account account) {
+        return connectionRepository.findAcceptedConnections(account);
+    }
+
+    public List<Connection> getNotAcceptedConnections(Account account) {
+        return connectionRepository.findBySenderOrReceiverAndIsAcceptedFalse(account);
     }
 }

@@ -43,12 +43,12 @@ public class ConnectionServiceTest {
 
     @Test
     public void newRequestIsSaved() {
-        connectionService.requestConnection(first, second);
-        assertEquals(1, connectionRepository.findAll().size());
+        Connection connection = connectionService.requestConnection(first, second);
+        assertTrue(connectionRepository.findAll().contains(connection));
     }
 
     @Test
-    public void allConnectionsAreReturned() {
+    public void allAcceptedConnectionsAreReturned() {
         Connection connection = new Connection();
         Account third = accountService.saveAccount("The Third", "kolmard", "password", "kolmard");
 
@@ -57,11 +57,13 @@ public class ConnectionServiceTest {
         connection.setAccepted(true);
 
         connectionRepository.save(connection);
+
+        // isAccepted = false in this one
         connectionService.requestConnection(first, second);
 
-        List<Connection> connections = connectionService.getConnections(first);
+        List<Connection> connections = connectionService.getAcceptedConnections(first);
 
-        assertEquals(2, connections.size());
+        assertEquals(1, connections.size());
     }
 
     @After

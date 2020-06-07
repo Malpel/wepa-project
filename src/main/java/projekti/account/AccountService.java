@@ -16,7 +16,7 @@ public class AccountService {
     PasswordEncoder passwordEncoder;
 
     public Account saveAccount(String name, String username, String password, String urlString) {
-        return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString, null, new ArrayList<>()));
+        return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString, null));
     }
 
     public Account getAccountByUrl(String urlString) {

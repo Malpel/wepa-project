@@ -48,7 +48,7 @@ public class AccountServiceTest {
         Account account  = accountService
                             .saveAccount("Maydup Nem", "m_nem", "asdqwe123", "mnem");
 
-        assertEquals(2, accountRepository.findAll().size());
+        assertTrue(accountRepository.findAll().contains(account));
     }
 /*
     @Test
@@ -63,7 +63,7 @@ public class AccountServiceTest {
     @Test
     public void accountIsFoundByUrlString() {
         Account foundByUrlString = accountService.getAccountByUrl(first.getUrlString());
-        assertEquals(first.getUsername(), foundByUrlString.getUsername());
+        assertEquals(first, foundByUrlString);
     }
 /*
     @Test

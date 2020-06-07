@@ -25,7 +25,4 @@ public class Account extends AbstractPersistable<Long> {
 
     @OneToOne(mappedBy = "account")
     private FileObject fo;
-    
-    @OneToMany
-    private List<Account> friends;
 }
