@@ -24,14 +24,14 @@ public class ConnectionController {
         Account sender = accountService.findByUsername(auth.getName());
         Account receiver = accountService.findById(id);
 
-        connectionService.newConnection(sender, receiver);
+        connectionService.requestConnection(sender, receiver);
 
         return "redirect:/";
     }
 
     @PostMapping("/users/{id}/connect/{connectionId}")
     public String acceptRequest(@PathVariable Long connectionId) {
-        connectionService.updateConnection(connectionId);
+        connectionService.acceptConnection(connectionId);
         return "redirect:/";
     }
 }

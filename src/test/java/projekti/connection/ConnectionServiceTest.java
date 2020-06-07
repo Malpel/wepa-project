@@ -42,18 +42,22 @@ public class ConnectionServiceTest {
     }
 
     @Test
-    public void newConnectionIsSaved() {
-        Connection connection = connectionService.newConnection(first, second);
-        assertTrue(connectionRepository.findAll().contains(connection));
+    public void newRequestIsSaved() {
+        connectionService.requestConnection(first, second);
+        assertEquals(1, connectionRepository.findAll().size());
     }
 
     @Test
     public void allConnectionsAreReturned() {
         Connection connection = new Connection();
-        connection.setSender(second);
+        Account third = accountService.saveAccount("The Third", "kolmard", "password", "kolmard");
+
+        connection.setSender(third);
         connection.setReceiver(first);
         connection.setAccepted(true);
+
         connectionRepository.save(connection);
+        connectionService.requestConnection(first, second);
 
         List<Connection> connections = connectionService.getConnections(first);
 
@@ -63,6 +67,7 @@ public class ConnectionServiceTest {
     @After
     public void tearDown() {
         connectionRepository.deleteAll();
+        accountService.deleteAll();
     }
 
 }

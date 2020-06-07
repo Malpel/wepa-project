@@ -12,7 +12,7 @@ public class ConnectionService {
     @Autowired
     ConnectionRepository connectionRepository;
 
-    public Connection newConnection(Account sender, Account receiver) {
+    public Connection requestConnection(Account sender, Account receiver) {
         Connection connection = new Connection();
 
         connection.setSender(sender);
@@ -26,13 +26,13 @@ public class ConnectionService {
         return connectionRepository.getOne(id);
     }
 
-    public Connection updateConnection(Long connectionId) {
+    public Connection acceptConnection(Long connectionId) {
         Connection connection = connectionRepository.getOne(connectionId);
         connection.setAccepted(true);
         return connectionRepository.save(connection);
     }
 
     public List<Connection> getConnections(Account account) {
-        return connectionRepository.findBySenderOrReceiverAndIsAccepted(account);
+        return connectionRepository.findBySenderOrReceiver(account);
     }
 }

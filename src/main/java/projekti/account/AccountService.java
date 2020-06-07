@@ -16,7 +16,7 @@ public class AccountService {
     PasswordEncoder passwordEncoder;
 
     public Account saveAccount(String name, String username, String password, String urlString) {
-        return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString, null));
+        return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString, null, new ArrayList<>()));
     }
 
     public Account getAccountByUrl(String urlString) {
@@ -33,5 +33,9 @@ public class AccountService {
 
     public Account findById(Long id) {
         return accountRepository.getOne(id);
+    }
+
+    public void deleteAll() {
+        accountRepository.deleteAll();
     }
 }
