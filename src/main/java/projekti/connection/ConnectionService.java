@@ -39,4 +39,8 @@ public class ConnectionService {
     public List<Connection> getNotAcceptedConnections(Account account) {
         return connectionRepository.findBySenderOrReceiverAndIsAcceptedFalse(account);
     }
+
+    public void disconnect(Long id) {
+        connectionRepository.deleteById(id);
+    }
 }

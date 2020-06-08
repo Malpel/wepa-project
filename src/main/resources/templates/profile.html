@@ -20,7 +20,34 @@
 <div>
     <h2>Freinds</h2>
     <div th:each="connection : ${connections}">
-        <a th:text="${connection.username}"></a>
+        <div th:if="${connection.receiver.username.equals(account.username)}">
+            <table>
+                <tr>
+                    <td>
+                        <a th:text="${connection.sender.name}" th:href="@{/users/{urlString}(urlString=${connection.sender.urlString})}"></a>
+                    </td>
+                    <td>
+                        <form th:action="@{/connection/{id}/disconnect(id=${connection.id})}" method="POST">
+                            <input type="submit" value="Disconnect"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div th:if="${not connection.receiver.username.equals(account.username)}">
+            <table>
+                <tr>
+                    <td>
+                        <a th:text="${connection.receiver.name}" th:href="@{/users/{urlString}(urlString=${connection.receiver.urlString})}"></a>
+                    </td>
+                    <td>
+                        <form th:action="@{/connection/{id}/disconnect(id=${connection.id})}" method="POST">
+                            <input type="submit" value="Disconnect"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -28,11 +55,26 @@
     <h2>Requests</h2>
     <div th:each="request : ${requests}">
         <div th:if="${request.receiver.username.equals(account.username)}">
-            <a th:text="${request.sender.username}"></a>
-            <
+                <table>
+                    <tr>
+                        <td>
+                            <a th:text="${request.sender.name}" th:href="@{/users/{urlString}(urlString=${request.sender.urlString})}"></a>
+                        </td>
+                        <td>
+                            <form th:action="@{/connection/{id}/accept(id=${request.id})}" method="POST">
+                                <input type="submit" value="Accept"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form>
+                                <input type="submit" value="Decline"/>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
         </div>
         <div th:if="${not request.receiver.username.equals(account.username)}">
-            <a th:text="${request.receiver.username}"></a>
+            <a th:text="${request.receiver.name}" th:href="@{/users/{urlString}(urlString=${request.receiver.urlString})}"></a>
         </div>
 
     </div>

@@ -54,12 +54,6 @@ public class AccountController {
     @PostMapping("/users/{urlString}/pics")
     public String addProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String urlString) throws IOException {
         Account account = accountService.getAccountByUrl(urlString);
-        FileObject fo = fileObjectService.findByAccountId(account.getId());
-
-        if (fo != null) {
-            fileObjectService.deleteOne(fo);
-        }
-
         fileObjectService.save(file, account);
         System.out.println("file saved");
 

@@ -26,8 +26,12 @@ public class FileObjectService {
     }
 
     public FileObject save(MultipartFile file, Account account) throws IOException {
+        FileObject fo = fileObjectRepository.findByAccountId(account.getId());
 
-        FileObject fo = new FileObject();
+        if (fo == null) {
+            fo = new FileObject();
+        }
+
         fo.setContent(file.getBytes());
         fo.setAccount(account);
 
@@ -36,9 +40,5 @@ public class FileObjectService {
 
     public FileObject findByAccountId(Long id) {
         return fileObjectRepository.findByAccountId(id);
-    }
-
-    public void deleteOne(FileObject fo) {
-        fileObjectRepository.delete(fo);
     }
 }

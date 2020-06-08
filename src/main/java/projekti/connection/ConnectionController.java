@@ -29,9 +29,15 @@ public class ConnectionController {
         return "redirect:/";
     }
 
-    @PostMapping("/users/{id}/connect/{connectionId}")
+    @PostMapping("/connection/{connectionId}/accept")
     public String acceptRequest(@PathVariable Long connectionId) {
         connectionService.acceptConnection(connectionId);
+        return "redirect:/";
+    }
+
+    @PostMapping("/connection/{connectionId}/disconnect")
+    public String disconnect(@PathVariable Long connectionId) {
+        connectionService.disconnect(connectionId);
         return "redirect:/";
     }
 }
