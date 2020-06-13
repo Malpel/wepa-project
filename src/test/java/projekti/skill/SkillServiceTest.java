@@ -33,29 +33,32 @@ public class SkillServiceTest {
     @Before
     public void init() {
         account = accountService.saveAccount("Maydup Nem", "m_nem", "asdqwe123", "mnem");
+        skillRepository.save(new Skill("4sight", 0, account));
+    }
+
+    @After
+    public void tearDown() {
+        skillRepository.deleteAll();
+        accountService.deleteAll();
     }
 
     @Test
     public void newSkillsAreSaved() {
         String skillName = "Test automation";
         skillService.addSkill(skillName, account);
-        assertEquals(1, skillRepository.findAll().size());
-        assertEquals(skillName, skillRepository.findAll().get(0).getName());
+
+        assertEquals(2, skillRepository.findAll().size());
+        assertEquals(skillName, skillRepository.findAll().get(1).getName());
     }
 
     @Test
     public void allUsersSkillsAreFound() {
         String skillName = "Test automation";
         skillService.addSkill(skillName, account);
+
         skillName = "test123";
         skillService.addSkill(skillName, account);
-        assertEquals(2, skillService.getSkills(account).size());
-    }
 
-    @After
-    public void tearDown() {
-        accountService.deleteAll();
-        skillRepository.deleteAll();
+        assertEquals(3, skillService.getSkills(account).size());
     }
-
 }

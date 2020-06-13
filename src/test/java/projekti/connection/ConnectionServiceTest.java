@@ -15,8 +15,7 @@ import projekti.account.AccountService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -44,7 +43,10 @@ public class ConnectionServiceTest {
     @Test
     public void newRequestIsSaved() {
         Connection connection = connectionService.requestConnection(first, second);
-        assertTrue(connectionRepository.findAll().contains(connection));
+        Connection c = connectionRepository.findAll().get(0);
+        assertEquals(connection.getSender().getUsername(), c.getSender().getUsername());
+        assertEquals(connection.getReceiver().getUsername(), c.getReceiver().getUsername());
+        assertFalse(c.isAccepted());
     }
 
     @Test

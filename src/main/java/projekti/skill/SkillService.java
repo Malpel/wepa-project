@@ -16,6 +16,7 @@ public class SkillService {
         return skillRepository.save(new Skill(name, 0, account));
     }
 
+    // needs changing, doesn't work
     public Skill addCompliment(Long id) {
         Skill skill = skillRepository.getOne(id);
         skill.setCompliments(skill.getCompliments() + 1);

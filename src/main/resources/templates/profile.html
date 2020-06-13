@@ -17,6 +17,22 @@
         <input type="submit" value="Send!"/>
     </form>
 </div>
+<br/>
+<div id="skills">
+    <h2>Skills</h2>
+    <table>
+        <tr th:each="skill : ${account.skills}">
+            <td th:text="${skill.name}"></td>
+            <td th:text="${skill.compliments}"></td>
+        </tr>
+    </table>
+
+    <form th:action="@{/users/{urlString}/skills(urlString=${account.urlString})}" method="POST">
+        <input type="text" name="skillName"/>
+        <input type="submit" value="Add skill"/>
+    </form>
+</div>
+
 <div>
     <h2>Freinds</h2>
     <div th:each="connection : ${connections}">
