@@ -21,32 +21,10 @@
     <h2>Freinds</h2>
     <div th:each="connection : ${connections}">
         <div th:if="${connection.receiver.username.equals(account.username)}">
-            <table>
-                <tr>
-                    <td>
-                        <a th:text="${connection.sender.name}" th:href="@{/users/{urlString}(urlString=${connection.sender.urlString})}"></a>
-                    </td>
-                    <td>
-                        <form th:action="@{/connection/{id}/disconnect(id=${connection.id})}" method="POST">
-                            <input type="submit" value="Disconnect"/>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+            <div th:replace="fragments/layout :: friendDiv(person=${connection.sender}, connectionId=${connection.id})"></div>
         </div>
         <div th:if="${not connection.receiver.username.equals(account.username)}">
-            <table>
-                <tr>
-                    <td>
-                        <a th:text="${connection.receiver.name}" th:href="@{/users/{urlString}(urlString=${connection.receiver.urlString})}"></a>
-                    </td>
-                    <td>
-                        <form th:action="@{/connection/{id}/disconnect(id=${connection.id})}" method="POST">
-                            <input type="submit" value="Disconnect"/>
-                        </form>
-                    </td>
-                </tr>
-            </table>
+            <div th:replace="fragments/layout :: friendDiv(person=${connection.receiver}, connectionId=${connection.id})"></div>
         </div>
     </div>
 </div>
@@ -66,7 +44,7 @@
                             </form>
                         </td>
                         <td>
-                            <form>
+                            <form th:action="@{/connection/{id}/disconnect(id=${connection.id})}" method="POST">
                                 <input type="submit" value="Decline"/>
                             </form>
                         </td>

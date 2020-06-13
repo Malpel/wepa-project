@@ -1,6 +1,8 @@
 package projekti.connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import projekti.account.Account;
 
@@ -28,8 +30,14 @@ public class ConnectionService {
 
     public Connection acceptConnection(Long connectionId) {
         Connection connection = connectionRepository.getOne(connectionId);
-        connection.setAccepted(true);
-        return connectionRepository.save(connection);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (connection.getReceiver().getUsername().equals(auth.getName())) {
+            connection.setAccepted(true);
+            connection = connectionRepository.save(connection);
+        }
+
+        return connection;
     }
 
     public List<Connection> getAcceptedConnections(Account account) {

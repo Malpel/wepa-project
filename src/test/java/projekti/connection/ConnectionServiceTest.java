@@ -24,16 +24,16 @@ import static org.junit.Assert.assertTrue;
 public class ConnectionServiceTest {
 
     @Autowired
-    ConnectionService connectionService;
+    private ConnectionService connectionService;
 
     @Autowired
-    ConnectionRepository connectionRepository;
+    private ConnectionRepository connectionRepository;
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
-    Account first;
-    Account second;
+    private Account first;
+    private Account second;
 
     @Before
     public void init() {

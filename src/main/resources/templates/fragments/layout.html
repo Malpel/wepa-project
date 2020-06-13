@@ -11,5 +11,19 @@
                 <input type="submit" value="Search"/>
             </form>
         </header>
+
+
+            <table th:fragment="friendDiv(person, connectionId)">
+                <tr>
+                    <td>
+                        <a th:text="${person.name}" th:href="@{/users/{urlString}(urlString=${person.urlString})}"></a>
+                    </td>
+                    <td>
+                        <form th:action="@{/connection/{id}/disconnect(id=${connectionId})}" method="POST">
+                            <input type="submit" value="Disconnect"/>
+                        </form>
+                    </td>
+                </tr>
+            </table>
     </body>
 </html>

@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import projekti.connection.Connection;
 import projekti.connection.ConnectionService;
-import projekti.fileObject.FileObject;
 import projekti.fileObject.FileObjectService;
+import projekti.skill.Skill;
+import projekti.skill.SkillService;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +25,9 @@ public class AccountController {
 
     @Autowired
     private ConnectionService connectionService;
+
+    @Autowired
+    private SkillService skillService;
 
     @GetMapping("/register")
     public String getRegisterForm() {
@@ -79,5 +83,4 @@ public class AccountController {
 
         return "searchResults";
     }
-
 }

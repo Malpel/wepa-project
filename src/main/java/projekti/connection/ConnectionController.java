@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import projekti.account.Account;
 import projekti.account.AccountService;
 
@@ -29,13 +31,13 @@ public class ConnectionController {
         return "redirect:/";
     }
 
-    @PostMapping("/connection/{connectionId}/accept")
+    @PutMapping("/connection/{connectionId}/accept")
     public String acceptRequest(@PathVariable Long connectionId) {
         connectionService.acceptConnection(connectionId);
         return "redirect:/";
     }
 
-    @PostMapping("/connection/{connectionId}/disconnect")
+    @DeleteMapping("/connection/{connectionId}/disconnect")
     public String disconnect(@PathVariable Long connectionId) {
         connectionService.disconnect(connectionId);
         return "redirect:/";
