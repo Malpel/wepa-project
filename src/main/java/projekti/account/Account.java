@@ -11,6 +11,10 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(name = "Account.foAndConnectionsAndSkills", attributeNodes = {
+        @NamedAttributeNode("connections"),
+        @NamedAttributeNode("fo")
+})
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor
@@ -36,9 +40,12 @@ public class Account extends AbstractPersistable<Long> {
     @Size(min = 1, max = 30)
     private String urlString;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private FileObject fo;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Account> connections = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Skill> skills = new ArrayList<>();
 }

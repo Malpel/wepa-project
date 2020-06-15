@@ -13,13 +13,13 @@
         </header>
 
 
-            <table th:fragment="friendDiv(person, connectionId)">
+            <table th:fragment="friendDiv(friend, user)">
                 <tr>
                     <td>
-                        <a th:text="${person.name}" th:href="@{/users/{urlString}(urlString=${person.urlString})}"></a>
+                        <a th:text="${friend.name}" th:href="@{/users/{urlString}(urlString=${friend.urlString})}"></a>
                     </td>
                     <td>
-                        <form th:action="@{/connection/{id}/disconnect(id=${connectionId})}" method="POST">
+                        <form th:action="@{/disconnect}" method="POST">
                             <input type="submit" value="Disconnect"/>
                         </form>
                     </td>

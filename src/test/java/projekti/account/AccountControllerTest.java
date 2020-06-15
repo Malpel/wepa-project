@@ -59,7 +59,7 @@ public class AccountControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
 
-        assertNotNull(accountService.getAccountByUrl("Neyous"));
+        assertNotNull(accountService.getAccountByUrlString("Neyous"));
     }
 
     @Test

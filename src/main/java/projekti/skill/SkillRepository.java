@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
     List<Skill> findAllByAccount(Account account);
+    Skill findByIdAndAccount(Long id, Account account);
 }

@@ -19,14 +19,15 @@ public class SkillController {
 
     @PostMapping("/users/{urlString}/skills")
     public String addSkill(@PathVariable String urlString, @RequestParam String skillName) {
-        Account account = accountService.getAccountByUrl(urlString);
+        Account account = accountService.getAccountByUrlString(urlString);
         skillService.addSkill(skillName, account);
         return "redirect:/users/" + urlString;
     }
 
     @PostMapping("/users/{urlString}/skills/{skillId}")
     public String compliment(@PathVariable String urlString, @PathVariable Long skillId) {
-        skillService.addCompliment(skillId);
+        Account account = accountService.getAccountByUrlString(urlString);
+        skillService.addCompliment(skillId, account);
         return "redirect:/users/" + urlString;
     }
 }

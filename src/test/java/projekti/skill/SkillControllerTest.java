@@ -58,5 +58,4 @@ public class SkillControllerTest {
         assertEquals(1, skillRepository.findAll().size());
         assertEquals("testing", skillRepository.findAll().get(0).getName());
     }
-
 }

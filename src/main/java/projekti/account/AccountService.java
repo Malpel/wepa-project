@@ -3,6 +3,7 @@ package projekti.account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class AccountService {
         return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString));
     }
 
-    public Account getAccountByUrl(String urlString) {
+    public Account getAccountByUrlString(String urlString) {
         return accountRepository.findByUrlString(urlString);
     }
 
@@ -33,6 +34,15 @@ public class AccountService {
 
     public Account findById(Long id) {
         return accountRepository.getOne(id);
+    }
+
+    @Transactional
+    public void addFriend(Account one, Account two) {
+        one.getConnections().add(two);
+        two.getConnections().add(one);
+
+        accountRepository.save(one);
+        accountRepository.save(two);
     }
 
     public void deleteAll() {

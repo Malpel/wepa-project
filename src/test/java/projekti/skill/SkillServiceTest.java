@@ -29,11 +29,12 @@ public class SkillServiceTest {
     private AccountService accountService;
 
     private Account account;
+    private Skill skill;
 
     @Before
     public void init() {
         account = accountService.saveAccount("Maydup Nem", "m_nem", "asdqwe123", "mnem");
-        skillRepository.save(new Skill("4sight", 0, account));
+        skill = skillRepository.save(new Skill("4sight", 0, account));
     }
 
     @After
@@ -60,5 +61,11 @@ public class SkillServiceTest {
         skillService.addSkill(skillName, account);
 
         assertEquals(3, skillService.getSkills(account).size());
+    }
+
+    @Test
+    public void complimentsAreSaved() {
+        skillService.addCompliment(skill.getId(), account);
+        assertEquals(1, skillRepository.findAll().get(0).getCompliments());
     }
 }

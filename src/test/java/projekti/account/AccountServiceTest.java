@@ -42,6 +42,11 @@ public class AccountServiceTest {
           first = accountRepository.save(account);
      }
 
+    @After
+    public void tearDown() {
+        accountRepository.deleteAll();
+    }
+
     @Test
     public void newAccountIsSaved() {
         Account account  = accountService
@@ -52,14 +57,15 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void accountIsFoundByUrlString() {
-        Account foundByUrlString = accountService.getAccountByUrl(first.getUrlString());
+    public void accountCanBeFoundByUrlString() {
+        Account foundByUrlString = accountService.getAccountByUrlString("exists");
         assertEquals(first.getUsername(), foundByUrlString.getUsername());
     }
 
-    @After
-    public void tearDown() {
-         accountRepository.deleteAll();
+    @Test
+    public void accountCanBeFoundByUsername() {
+         Account foundByUsername = accountService.findByUsername("b4u");
+         assertEquals(first.getUsername(), foundByUsername.getUsername());
     }
 
 }

@@ -4,14 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import projekti.connection.Connection;
 import projekti.connection.ConnectionService;
 import projekti.fileObject.FileObjectService;
-import projekti.skill.Skill;
 import projekti.skill.SkillService;
 
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -46,28 +43,11 @@ public class AccountController {
 
     @GetMapping("/users/{urlString}")
      public String getProfile(Model model, @PathVariable String urlString) {
-        Account account = accountService.getAccountByUrl(urlString);
-        List<Connection> connections = connectionService.getAcceptedConnections(account);
-        List<Connection> requests = connectionService.getNotAcceptedConnections(account);
+        Account account = accountService.getAccountByUrlString(urlString);
+        List<Connection> requests = connectionService.getRequests(account);
         model.addAttribute("account", account);
-        model.addAttribute("connections", connections);
         model.addAttribute("requests", requests);
         return "profile";
-    }
-
-    @PostMapping("/users/{urlString}/pics")
-    public String addProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String urlString) throws IOException {
-        Account account = accountService.getAccountByUrl(urlString);
-        fileObjectService.save(file, account);
-        System.out.println("file saved");
-
-        return "redirect:/users/" + urlString;
-    }
-
-    @GetMapping(value = "/users/{id}/pics", produces = "image/jpg")
-    @ResponseBody
-    public byte[] getProfilePic(@PathVariable Long id) {
-        return fileObjectService.findByAccountId(id).getContent();
     }
 
     @PostMapping("/users/search")
