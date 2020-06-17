@@ -10,6 +10,13 @@
                 <input type="text" name="name" placeholder="Search for users"/>
                 <input type="submit" value="Search"/>
             </form>
+            <div sec:authorize="isAuthenticated()">
+                <span sec:authentication="name"></span>
+                <form th:action="@{/logout}" method="POST">
+                    <input type="submit" value="Logout"/>
+                </form>
+            </div>
+
         </header>
 
 

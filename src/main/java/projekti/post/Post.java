@@ -5,10 +5,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import projekti.account.Account;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
@@ -20,12 +20,15 @@ public class Post extends AbstractPersistable<Long> {
     private String content;
 
     @NonNull
-    private int likes;
-
-    @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Account> liked = new ArrayList<>();
+
     @CreationTimestamp
     private Timestamp timestamp;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Post> comments = new ArrayList<>();
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.account.Account;
 import projekti.account.AccountRepository;
 
@@ -65,12 +66,26 @@ public class PostServiceTest {
 
     @Test
     public void postsByConnectionsAreFound() {
-        postRepository.save(new Post(content, 0, account));
-        postRepository.save(new Post(content + " dolor sit amet", 0, huker));
-        postRepository.save(new Post("Vires in numeris", 0, huker));
+        postRepository.save(new Post(content, account));
+        postRepository.save(new Post(content + " dolor sit amet", huker));
+        postRepository.save(new Post("Vires in numeris", huker));
 
         List<Post> posts = postService.getPosts(account);
 
         assertEquals(3, posts.size());
+    }
+
+    @Test
+    @Transactional
+    public void commentsAreSaved() {
+        Post post = new Post("Vires in numeris", account);
+        post = postRepository.save(post);
+
+        postService.saveComment("In vino veritas", huker, post.getId());
+
+        Post commented = postRepository.findAll().get(0);
+
+        assertEquals(1, commented.getComments().size());
+        assertEquals("In vino veritas", commented.getComments().get(0).getContent());
     }
 }
