@@ -15,6 +15,7 @@ import projekti.account.AccountRepository;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -61,14 +62,14 @@ public class PostServiceTest {
         List<Post> posts = postRepository.findAll();
 
         assertEquals(content, posts.get(0).getContent());
-        assertEquals(account.getId(), posts.get(0).getAccount().getId());
+        assertEquals(account.getId(), posts.get(0).getCreatedBy().getId());
     }
 
     @Test
     public void postsByConnectionsAreFound() {
-        postRepository.save(new Post(content, account));
-        postRepository.save(new Post(content + " dolor sit amet", huker));
-        postRepository.save(new Post("Vires in numeris", huker));
+        postRepository.save(new Post(content, account, false));
+        postRepository.save(new Post(content + " dolor sit amet", huker, false));
+        postRepository.save(new Post("Vires in numeris", huker, false));
 
         List<Post> posts = postService.getPosts(account);
 
@@ -78,7 +79,7 @@ public class PostServiceTest {
     @Test
     @Transactional
     public void commentsAreSaved() {
-        Post post = new Post("Vires in numeris", account);
+        Post post = new Post("Vires in numeris", account, true);
         post = postRepository.save(post);
 
         postService.saveComment("In vino veritas", huker, post.getId());
@@ -87,5 +88,6 @@ public class PostServiceTest {
 
         assertEquals(1, commented.getComments().size());
         assertEquals("In vino veritas", commented.getComments().get(0).getContent());
+        assertTrue(commented.getComments().get(0).isComment());
     }
 }

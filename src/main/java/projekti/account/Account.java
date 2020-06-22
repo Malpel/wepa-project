@@ -1,8 +1,10 @@
 package projekti.account;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import projekti.fileObject.FileObject;
+import projekti.post.Post;
 import projekti.skill.Skill;
 
 import javax.persistence.*;
@@ -43,9 +45,13 @@ public class Account extends AbstractPersistable<Long> {
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private FileObject fo;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Account> connections = new ArrayList<>();
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OrderBy("compliments DESC")
     private List<Skill> skills = new ArrayList<>();
+
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 }

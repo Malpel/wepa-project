@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import projekti.account.Account;
@@ -24,8 +25,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public String getPosts(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Account account = accountService.findByUsername(auth.getName());
+        Account account = getUser();
         List<Post> posts = postService.getPosts(account);
 
         model.addAttribute("posts", posts);
@@ -36,11 +36,20 @@ public class PostController {
 
     @PostMapping("/posts/new")
     public String newPost(@RequestParam String content) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Account account = accountService.findByUsername(auth.getName());
-
+        Account account = getUser();
         postService.savePost(content, account);
+        return "redirect:/posts";
+    }
 
-        return "redirect:/posts/";
+    @PostMapping("/posts/{id}/comment")
+    public String comment(@PathVariable Long id, @RequestParam String content) {
+        Account account = getUser();
+        postService.saveComment(content, account, id);
+        return "redirect:/posts";
+    }
+
+    private Account getUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return accountService.findByUsername(auth.getName());
     }
 }

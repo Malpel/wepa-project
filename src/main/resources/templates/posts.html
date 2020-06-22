@@ -23,19 +23,36 @@
     <div th:each="post : ${posts}">
         <table>
             <tr>
-                <td th:text="${post.account.name}"></td>
+                <td th:text="${post.createdBy.name}"></td>
                 <td th:text="${post.timestamp}"></td>
             </tr>
             <tr >
                 <td th:text="${post.content}"></td>
             </tr>
-            <tr>
-                <td th:each="comment : ${post.comments}"></td>
-            </tr>
-            <tr>
-
-            </tr>
         </table>
+
+        <h4>Comments: </h4>
+        <div th:each="comment : ${post.comments}">
+            <table>
+                <tr>
+                    <td th:text="${comment.createdBy.name}"></td>
+                    <td th:text="${comment.timestamp}"></td>
+                </tr>
+                <tr>
+                    <td th:text="${comment.content}" ></td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <h4>Leave a Comment</h4>
+            <form th:action="@{/posts/{id}/comment(id=${post.id})}" method="POST">
+                <input type="text" name="content"/>
+                <input type="submit" value="Send"/>
+            </form>
+        </div>
+
+        <br/>
     </div>
 </div>
 

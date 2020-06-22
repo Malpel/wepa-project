@@ -21,7 +21,7 @@ public class Post extends AbstractPersistable<Long> {
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account account;
+    private Account createdBy;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Account> liked = new ArrayList<>();
@@ -30,5 +30,9 @@ public class Post extends AbstractPersistable<Long> {
     private Timestamp timestamp;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @OrderBy("timestamp DESC")
     private List<Post> comments = new ArrayList<>();
+
+    @NonNull
+    private boolean isComment;
 }

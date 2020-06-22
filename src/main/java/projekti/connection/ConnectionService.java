@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.account.Account;
 import projekti.account.AccountService;
 
@@ -33,6 +34,7 @@ public class ConnectionService {
         return connectionRepository.getOne(id);
     }
 
+    @Transactional
     public Connection acceptConnection(Long connectionId) {
         Connection connection = connectionRepository.getOne(connectionId);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

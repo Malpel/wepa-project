@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.account.Account;
 
 import java.util.List;
@@ -21,11 +22,11 @@ public class PostService {
 
         Pageable pageable = PageRequest.of(0, 25, Sort.by("timestamp").descending());
 
-        return postRepository.findByAccountIn(all, pageable);
+        return postRepository.findByCreatedByInAndIsCommentFalse(all, pageable);
     }
 
     public Post savePost(String content, Account account) {
-        return postRepository.save(new Post(content, account));
+        return postRepository.save(new Post(content, account, false));
     }
 
     public Post likePost(Long id) {
@@ -34,10 +35,12 @@ public class PostService {
         return postRepository.save(post);
     }
 
-
+    // change to transactional?
+    @Transactional
     public Post saveComment(String content, Account account, Long id) {
-        Post comment = savePost(content, account);
+        Post comment = postRepository.save(new Post(content, account, true));
         Post post = postRepository.getOne(id);
+
 
         post.getComments().add(comment);
 
