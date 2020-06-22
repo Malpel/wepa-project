@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import projekti.account.Account;
+import projekti.connection.ConnectionService;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ConnectionService connectionService;
 
     public List<Post> getPosts(Account account) {
         List<Account> all = account.getConnections();
@@ -35,7 +39,6 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    // change to transactional?
     @Transactional
     public Post saveComment(String content, Account account, Long id) {
         Post comment = postRepository.save(new Post(content, account, true));

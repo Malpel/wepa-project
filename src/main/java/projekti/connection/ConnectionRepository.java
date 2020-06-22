@@ -9,4 +9,7 @@ import java.util.List;
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
     @Query(value = "SELECT * FROM CONNECTION WHERE (SENDER_ID = ?1 OR RECEIVER_ID = ?1) AND IS_ACCEPTED = FALSE", nativeQuery = true)
     List<Connection> findBySenderOrReceiverAndIsAcceptedFalse(Account account);
+
+    @Query(value = "DELETE FROM CONNECTION WHERE (SENDER_ID = ?1 AND RECEIVER_ID = ?2) OR (SENDER_ID = ?2 AND RECEIVER_ID = ?1)", nativeQuery = true)
+    Connection deleteBySenderAndReceiver(Account one, Account two);
 }

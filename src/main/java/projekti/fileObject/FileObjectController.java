@@ -1,6 +1,7 @@
 package projekti.fileObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ public class FileObjectController {
     @Autowired
     private AccountService accountService;
 
+    @Secured("USER")
     @PostMapping("/users/{urlString}/pics")
     public String addProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String urlString) throws IOException {
         Account account = accountService.getAccountByUrlString(urlString);

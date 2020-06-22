@@ -1,6 +1,7 @@
 package projekti.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,7 @@ public class AccountController {
         return "profile";
     }
 
+    @Secured("USER")
     @PostMapping("/users/search")
     public String searchUsers(Model model, @RequestParam String name) {
         Account account = accountService.searchByName(name);

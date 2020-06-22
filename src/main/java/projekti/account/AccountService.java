@@ -45,6 +45,15 @@ public class AccountService {
         accountRepository.save(two);
     }
 
+    @Transactional
+    public void removeFriend(Account one, Account two) {
+        one.getConnections().remove(two);
+        two.getConnections().remove(one);
+
+        accountRepository.save(one);
+        accountRepository.save(two);
+    }
+
     public void deleteAll() {
         accountRepository.deleteAll();
     }

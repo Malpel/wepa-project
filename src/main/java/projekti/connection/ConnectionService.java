@@ -49,16 +49,16 @@ public class ConnectionService {
         return connection;
     }
 
-    /*
-    public List<Connection> getAcceptedConnections(Account account) {
-        return connectionRepository.findAcceptedConnections(account);
-    }
-*/
     public List<Connection> getRequests(Account account) {
         return connectionRepository.findBySenderOrReceiverAndIsAcceptedFalse(account);
     }
 
-    public void disconnect(Long id) {
+    public void decline(Long id) {
         connectionRepository.deleteById(id);
+    }
+
+    public Connection disconnect(Account one, Account two) {
+        accountService.removeFriend(one, two);
+        return connectionRepository.deleteBySenderAndReceiver(one, two);
     }
 }

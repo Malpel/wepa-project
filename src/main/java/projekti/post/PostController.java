@@ -1,6 +1,7 @@
 package projekti.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,7 @@ public class PostController {
         return "posts";
     }
 
+    @Secured("USER")
     @PostMapping("/posts/new")
     public String newPost(@RequestParam String content) {
         Account account = getUser();
@@ -41,6 +43,7 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    @Secured("USER")
     @PostMapping("/posts/{id}/comment")
     public String comment(@PathVariable Long id, @RequestParam String content) {
         Account account = getUser();

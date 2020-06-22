@@ -3,58 +3,63 @@
 <head>
     <meta charset="UTF-8" />
     <title>Posts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header"></div>
+<div th:replace="fragments/layout :: header(username=${account.username}, urlString=${account.urlString})"></div>
 
-<h2>Posts</h2>
+<div class="jumbotron">
+    <h2>Posts</h2>
 
-<div>
-    <h3>Make a new post</h3>
-    <form th:action="@{/posts/new}" method="POST">
-        <input type="text" name="content"/>
-        <input type="submit" value="Send"/>
-    </form>
-</div>
+    <div>
+        <h3>Make a new post</h3>
+        <form th:action="@{/posts/new}" method="POST">
+            <input type="text" name="content"/>
+            <input type="submit" value="Send"/>
+        </form>
+    </div>
 
-<div>
-    <h3>Posts from your network</h3>
-    <div th:each="post : ${posts}">
-        <table>
-            <tr>
-                <td th:text="${post.createdBy.name}"></td>
-                <td th:text="${post.timestamp}"></td>
-            </tr>
-            <tr >
-                <td th:text="${post.content}"></td>
-            </tr>
-        </table>
-
-        <h4>Comments: </h4>
-        <div th:each="comment : ${post.comments}">
+    <div>
+        <h3>Posts from your network</h3>
+        <div th:each="post : ${posts}">
             <table>
                 <tr>
-                    <td th:text="${comment.createdBy.name}"></td>
-                    <td th:text="${comment.timestamp}"></td>
+                    <td th:text="${post.createdBy.name}"></td>
+                    <td th:text="${post.timestamp}"></td>
                 </tr>
-                <tr>
-                    <td th:text="${comment.content}" ></td>
+                <tr >
+                    <td th:text="${post.content}"></td>
                 </tr>
             </table>
-        </div>
 
-        <div>
-            <h4>Leave a Comment</h4>
-            <form th:action="@{/posts/{id}/comment(id=${post.id})}" method="POST">
-                <input type="text" name="content"/>
-                <input type="submit" value="Send"/>
-            </form>
-        </div>
+            <h4>Comments: </h4>
+            <div th:each="comment : ${post.comments}">
+                <table>
+                    <tr>
+                        <td th:text="${comment.createdBy.name}"></td>
+                        <td th:text="${comment.timestamp}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="${comment.content}" ></td>
+                    </tr>
+                </table>
+            </div>
 
-        <br/>
+            <div>
+                <h4>Leave a Comment</h4>
+                <form th:action="@{/posts/{id}/comment(id=${post.id})}" method="POST">
+                    <input type="text" name="content"/>
+                    <input type="submit" value="Send"/>
+                </form>
+            </div>
+
+            <br/>
+        </div>
     </div>
 </div>
+
 
 
 </body>
