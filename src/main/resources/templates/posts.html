@@ -26,11 +26,19 @@
         <div th:each="post : ${posts}">
             <table>
                 <tr>
+                    <td th:text="${post.liked.size()}"></td>
                     <td th:text="${post.createdBy.name}"></td>
                     <td th:text="${post.timestamp}"></td>
                 </tr>
                 <tr >
                     <td th:text="${post.content}"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="POST">
+                            <input type="submit" value="like"/>
+                        </form>
+                    </td>
                 </tr>
             </table>
 

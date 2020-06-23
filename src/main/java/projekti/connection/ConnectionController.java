@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import projekti.account.Account;
 import projekti.account.AccountService;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class ConnectionController {
@@ -24,20 +23,14 @@ public class ConnectionController {
 
     @Secured("USER")
     @PostMapping("/users/{id}/connect")
-    public String sendRequest(@PathVariable Long id, HttpServletRequest request) {
+    public String sendRequest(@PathVariable Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account sender = accountService.findByUsername(auth.getName());
         Account receiver = accountService.findById(id);
 
         connectionService.requestConnection(sender, receiver);
 
-        String referer = request.getHeader("Referer");
-
-        System.out.println("**********************");
-        System.out.println(referer);
-        System.out.println("**********************");
-
-        return "redirect:" + referer;
+        return "redirect:/";
     }
 
     @Secured("USER")
@@ -56,15 +49,13 @@ public class ConnectionController {
 
     @Secured("USER")
     @PostMapping("/connection/disconnect")
-    public String disconnect(@RequestParam Long oneId, @RequestParam Long twoId, HttpServletRequest request) {
+    public String disconnect(@RequestParam Long oneId, @RequestParam Long twoId) {
         Account one = accountService.findById(oneId);
         Account two = accountService.findById(twoId);
 
         connectionService.disconnect(one, two);
 
-        String referer = request.getHeader("Referer");
-
-        return "redirect:" + referer;
+        return "redirect:/";
     }
 
 }

@@ -1,7 +1,6 @@
 package projekti.account;
 
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import projekti.fileObject.FileObject;
 import projekti.post.Post;
@@ -31,15 +30,18 @@ public class Account extends AbstractPersistable<Long> {
     @NotEmpty
     @NonNull
     @Size(min = 1, max = 30)
+    @Column(unique = true)
     private String username;
 
     @NotEmpty
     @NonNull
+    @Size(min = 8)
     private String password;
 
     @NotEmpty
     @NonNull
     @Size(min = 1, max = 30)
+    @Column(unique = true)
     private String urlString;
 
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)

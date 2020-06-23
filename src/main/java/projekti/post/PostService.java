@@ -33,17 +33,22 @@ public class PostService {
         return postRepository.save(new Post(content, account, false));
     }
 
-    public Post likePost(Long id) {
+    @Transactional
+    public Post likePost(Long id, Account account) {
         Post post = postRepository.getOne(id);
-        // change this
-        return postRepository.save(post);
+
+        if (!post.getCreatedBy().getUsername().equals(account.getUsername())) {
+            post.getLiked().add(account);
+            post = postRepository.save(post);
+        }
+
+        return post;
     }
 
     @Transactional
     public Post saveComment(String content, Account account, Long id) {
         Post comment = postRepository.save(new Post(content, account, true));
         Post post = postRepository.getOne(id);
-
 
         post.getComments().add(comment);
 

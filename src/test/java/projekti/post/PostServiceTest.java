@@ -31,9 +31,10 @@ public class PostServiceTest {
     @Autowired
     private AccountRepository accountRepository;
 
-    Account account;
-    Account huker;
-    String content = "Lorem ipsum";
+    private Account account;
+    private Account huker;
+    private String content = "Lorem ipsum";
+    private Post post;
 
     @Before
     public void init() {
@@ -47,6 +48,8 @@ public class PostServiceTest {
 
         accountRepository.save(account);
         accountRepository.save(huker);
+
+        post = postRepository.save(new Post("Vires in numeris", account, false));
     }
 
     @After
@@ -61,8 +64,8 @@ public class PostServiceTest {
 
         List<Post> posts = postRepository.findAll();
 
-        assertEquals(content, posts.get(0).getContent());
-        assertEquals(account.getId(), posts.get(0).getCreatedBy().getId());
+        assertEquals(content, posts.get(1).getContent());
+        assertEquals(account.getId(), posts.get(1).getCreatedBy().getId());
     }
 
     @Test
@@ -73,21 +76,29 @@ public class PostServiceTest {
 
         List<Post> posts = postService.getPosts(account);
 
-        assertEquals(3, posts.size());
+        assertEquals(4, posts.size());
     }
 
     @Test
     @Transactional
     public void commentsAreSaved() {
-        Post post = new Post("Vires in numeris", account, true);
-        post = postRepository.save(post);
-
         postService.saveComment("In vino veritas", huker, post.getId());
 
-        Post commented = postRepository.findAll().get(0);
+        assertEquals(1, post.getComments().size());
+        assertEquals("In vino veritas", post.getComments().get(0).getContent());
+        assertTrue(post.getComments().get(0).isComment());
+    }
 
-        assertEquals(1, commented.getComments().size());
-        assertEquals("In vino veritas", commented.getComments().get(0).getContent());
-        assertTrue(commented.getComments().get(0).isComment());
+    @Test
+    public void likesAreSaved() {
+        Post liked = postService.likePost(post.getId(), huker);
+        assertEquals(1, liked.getLiked().size());
+    }
+
+    @Test
+    @Transactional
+    public void userCannotLikeTheirOwnPost() {
+        Post liked = postService.likePost(post.getId(), account);
+        assertTrue(liked.getLiked().isEmpty());
     }
 }

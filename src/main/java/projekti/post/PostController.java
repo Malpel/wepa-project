@@ -24,6 +24,7 @@ public class PostController {
     @Autowired
     AccountService accountService;
 
+    @Secured("USER")
     @GetMapping("/posts")
     public String getPosts(Model model) {
         Account account = getUser();
@@ -48,6 +49,14 @@ public class PostController {
     public String comment(@PathVariable Long id, @RequestParam String content) {
         Account account = getUser();
         postService.saveComment(content, account, id);
+        return "redirect:/posts";
+    }
+
+    @Secured("USER")
+    @PostMapping("/posts/{id}/like")
+    public String likePost(@PathVariable Long id) {
+        Account account = getUser();
+        postService.likePost(id, account);
         return "redirect:/posts";
     }
 

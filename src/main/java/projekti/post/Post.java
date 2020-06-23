@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import projekti.account.Account;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
 public class Post extends AbstractPersistable<Long> {
 
     @NonNull
+    @NotEmpty
+    @Size(min = 1, max = 10000)
     private String content;
 
     @NonNull

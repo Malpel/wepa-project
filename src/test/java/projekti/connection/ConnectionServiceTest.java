@@ -1,13 +1,16 @@
 package projekti.connection;
 
+import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.account.Account;
 import projekti.account.AccountService;
 
@@ -30,11 +33,13 @@ public class ConnectionServiceTest {
 
     private Account first;
     private Account second;
+    private Connection connection;
 
     @Before
     public void init() {
-        first = accountService.saveAccount("Iwas Hierbevor", "b4u", "already", "exists");
-        second = accountService.saveAccount("Sec Ond", "tokand", "2wsx", "tokand");
+        first = accountService.saveAccount(new Account("Iwas Hierbevor", "b4u", "already", "exists"));
+        second = accountService.saveAccount(new Account("Sec Ond", "tokand", "2wsx", "tokand"));
+        connection = connectionRepository.save(new Connection(first, second, false));
     }
 
     @After
@@ -52,23 +57,45 @@ public class ConnectionServiceTest {
         assertFalse(c.isAccepted());
     }
 
-   /* @Test
-    public void allAcceptedConnectionsAreReturned() {
-        Connection connection = new Connection();
-        Account third = accountService.saveAccount("The Third", "kolmard", "password", "kolmard");
-
-        connection.setSender(third);
-        connection.setReceiver(first);
-        connection.setAccepted(true);
-
-        connectionRepository.save(connection);
-
-        // isAccepted = false in this one
-        connectionService.requestConnection(first, second);
-
-        List<Connection> connections = connectionService.getAcceptedConnections(first);
-
-        assertEquals(1, connections.size());
+    @Test
+    @Transactional
+    public void connectionIsFoundById() {
+        assertEquals(connection, connectionService.findById(connection.getId()));
     }
-    */
+
+    @Test
+    @WithMockUser(username = "tokand")
+    public void receiverCanAcceptConnection() {
+        connection = connectionService.acceptConnection(connection.getId());
+        assertTrue(connection.isAccepted());
+    }
+
+    @Test
+    @WithMockUser(username = "b4u")
+    public void senderCannotAcceptConnection() {
+        connection = connectionService.acceptConnection(connection.getId());
+        assertFalse(connection.isAccepted());
+    }
+
+    @Test
+    @WithMockUser(username = "tokand")
+    public void connectionIsDeclinedAndDeleted() {
+        connectionService.decline(connection.getId());
+        assertTrue(connectionRepository.findAll().isEmpty());
+    }
+
+    @Test
+    @WithMockUser(username = "b4u")
+    public void senderCannotDeclineConnection() {
+        connectionService.decline(connection.getId());
+        assertFalse(connectionRepository.findAll().isEmpty());
+    }
+
+    @Test
+    @WithMockUser(username = "tokand")
+    public void disconnectRemovesConnection() {
+        connectionService.disconnect(second, first);
+        assertTrue(connectionRepository.findAll().isEmpty());
+    }
+
 }

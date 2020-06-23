@@ -1,7 +1,6 @@
 package projekti.connection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +36,8 @@ public class ConnectionService {
     @Transactional
     public Connection acceptConnection(Long connectionId) {
         Connection connection = connectionRepository.getOne(connectionId);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (connection.getReceiver().getUsername().equals(auth.getName())) {
+        if (connection.getReceiver().getUsername().equals(getUser())) {
             connection.setAccepted(true);
             connection = connectionRepository.save(connection);
 
@@ -53,12 +51,23 @@ public class ConnectionService {
         return connectionRepository.findBySenderOrReceiverAndIsAcceptedFalse(account);
     }
 
+    @Transactional
     public void decline(Long id) {
-        connectionRepository.deleteById(id);
+        Connection connection = connectionRepository.getOne(id);
+
+        if (connection.getReceiver().getUsername().equals(getUser())) {
+            connectionRepository.delete(connection);
+        }
     }
 
-    public Connection disconnect(Account one, Account two) {
-        accountService.removeFriend(one, two);
-        return connectionRepository.deleteBySenderAndReceiver(one, two);
+    public void disconnect(Account one, Account two) {
+        if (getUser().equals(one.getUsername()) || getUser().equals(two.getUsername())) {
+            accountService.removeFriend(one, two);
+            connectionRepository.deleteBySenderAndReceiver(one, two);
+        }
+    }
+
+    private String getUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import static org.junit.Assert.*;
@@ -24,6 +25,7 @@ public class AccountServiceTest {
     private AccountRepository accountRepository;
 
     private Account first;
+    private Account second;
 
      @Before
      public void init() {
@@ -31,7 +33,7 @@ public class AccountServiceTest {
 
          String name = "Iwas Hierbevor";
          String username = "b4u";
-         String password = "already";
+         String password = "already_";
          String urlString = "exists";
 
          account.setName(name);
@@ -40,6 +42,7 @@ public class AccountServiceTest {
          account.setUrlString(urlString);
 
           first = accountRepository.save(account);
+          second = accountRepository.save(new Account("Tester Man", "tester", "asdqwe123", "test"));
      }
 
     @After
@@ -50,22 +53,41 @@ public class AccountServiceTest {
     @Test
     public void newAccountIsSaved() {
         Account account  = accountService
-                            .saveAccount("Maydup Nem", "m_nem", "asdqwe123", "mnem");
+                            .saveAccount(new Account("Maydup Nem", "m_nem", "asdqwe123", "mnem"));
 
-        assertEquals(2, accountRepository.findAll().size());
-        assertEquals("m_nem", accountRepository.findAll().get(1).getUsername());
+        assertEquals(3, accountRepository.findAll().size());
+        assertEquals("m_nem", accountRepository.findAll().get(2).getUsername());
     }
 
     @Test
-    public void accountCanBeFoundByUrlString() {
+    public void accountIsFoundByUrlString() {
         Account foundByUrlString = accountService.getAccountByUrlString("exists");
         assertEquals(first.getUsername(), foundByUrlString.getUsername());
     }
 
     @Test
-    public void accountCanBeFoundByUsername() {
+    public void accountIsFoundByUsername() {
          Account foundByUsername = accountService.findByUsername("b4u");
          assertEquals(first.getUsername(), foundByUsername.getUsername());
     }
 
+    @Test
+    @Transactional
+    public void accountIsFoundById() {
+         Account foundById = accountService.findById(first.getId());
+         assertEquals(first.getUsername(), foundById.getUsername());
+    }
+
+    @Test
+    public void friendsAreAddedAndRemoved() {
+         // addition
+         accountService.addFriend(first, second);
+         assertTrue(first.getConnections().contains(second));
+         assertTrue(second.getConnections().contains(first));
+
+         //removal
+        accountService.removeFriend(first, second);
+        assertFalse(first.getConnections().contains(second));
+        assertFalse(second.getConnections().contains(first));
+     }
 }

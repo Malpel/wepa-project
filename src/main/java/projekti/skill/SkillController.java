@@ -1,6 +1,7 @@
 package projekti.skill;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ public class SkillController {
     @Autowired
     private AccountService accountService;
 
+    @Secured("USER")
     @PostMapping("/users/{urlString}/skills")
     public String addSkill(@PathVariable String urlString, @RequestParam String skillName) {
         Account account = accountService.getAccountByUrlString(urlString);
@@ -24,8 +26,9 @@ public class SkillController {
         return "redirect:/users/" + urlString;
     }
 
+    @Secured("USER")
     @PostMapping("/users/{urlString}/skills/{skillId}")
-    public String compliment(@PathVariable String urlString, @PathVariable Long skillId) {
+    public String complimentSkill(@PathVariable String urlString, @PathVariable Long skillId) {
         Account account = accountService.getAccountByUrlString(urlString);
         skillService.addCompliment(skillId, account);
         return "redirect:/users/" + urlString;

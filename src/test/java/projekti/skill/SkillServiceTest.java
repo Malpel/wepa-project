@@ -6,13 +6,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import projekti.account.Account;
-import projekti.account.AccountService;
+import projekti.account.AccountRepository;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -26,26 +27,29 @@ public class SkillServiceTest {
     private SkillRepository skillRepository;
 
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
 
     private Account account;
+    private Account second;
     private Skill skill;
+    private String skillName = "Test automation";
 
     @Before
     public void init() {
-        account = accountService.saveAccount("Maydup Nem", "m_nem", "asdqwe123", "mnem");
+        account = accountRepository.save(new Account("Maydup Nem", "m_nem", "asdqwe123", "mnem"));
         skill = skillRepository.save(new Skill("4sight", 0, account));
+        second = accountRepository.save(new Account("Hugh Kerrs", "huker", "asdqwe123", "huker"));
     }
 
     @After
     public void tearDown() {
         skillRepository.deleteAll();
-        accountService.deleteAll();
+        accountRepository.deleteAll();
     }
 
     @Test
+    @WithMockUser("m_nem")
     public void newSkillsAreSaved() {
-        String skillName = "Test automation";
         skillService.addSkill(skillName, account);
 
         assertEquals(2, skillRepository.findAll().size());
@@ -53,19 +57,32 @@ public class SkillServiceTest {
     }
 
     @Test
-    public void allUsersSkillsAreFound() {
-        String skillName = "Test automation";
+    @WithMockUser("huker")
+    public void onlyUserCanAddSkillsForThemself() {
         skillService.addSkill(skillName, account);
+        assertEquals(1, skillRepository.findAllByAccount(account).size());
+    }
 
-        skillName = "test123";
+    @Test
+    @WithMockUser("m_nem")
+    public void allUsersSkillsAreFound() {
         skillService.addSkill(skillName, account);
+        skillService.addSkill("test123", account);
 
         assertEquals(3, skillService.getSkills(account).size());
     }
 
     @Test
+    @WithMockUser("huker")
     public void complimentsAreSaved() {
         skillService.addCompliment(skill.getId(), account);
-        assertEquals(1, skillRepository.findAll().get(0).getCompliments());
+        assertEquals(1, skillRepository.findByIdAndAccount(skill.getId(), account).getCompliments());
+    }
+
+    @Test
+    @WithMockUser("m_nem")
+    public void userCannotComplimentThemself() {
+        skillService.addCompliment(skill.getId(), account);
+        assertEquals(0, skillRepository.findByIdAndAccount(skill.getId(), account).getCompliments());
     }
 }

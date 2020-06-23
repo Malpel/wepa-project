@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import projekti.connection.Connection;
 import projekti.connection.ConnectionService;
 import projekti.fileObject.FileObjectService;
 import projekti.skill.SkillService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -27,18 +29,27 @@ public class AccountController {
     @Autowired
     private SkillService skillService;
 
+    @ModelAttribute
+    private Account getAccount() {
+        return new Account();
+    }
+
     @GetMapping("/register")
     public String getRegisterForm() {
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerAccount(@RequestParam String name,
-                                  @RequestParam String username,
-                                  @RequestParam String password,
-                                  @RequestParam String urlString) {
+    public String registerAccount(@Valid @ModelAttribute Account account, BindingResult bindingResult) {
 
-        accountService.saveAccount(name, username, password, urlString);
+        if (bindingResult.hasErrors()) {
+            return "register";
+        } else if (!accountService.uniqueUsername(account.getUsername())
+                || !accountService.uniqueUrlString(account.getUrlString())) {
+            return "register";
+        }
+
+        accountService.saveAccount(account);
         return "redirect:/login";
     }
 
@@ -51,6 +62,7 @@ public class AccountController {
         return "profile";
     }
 
+    // change search maybe
     @Secured("USER")
     @PostMapping("/users/search")
     public String searchUsers(Model model, @RequestParam String name) {

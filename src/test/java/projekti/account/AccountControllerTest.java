@@ -7,10 +7,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -38,7 +40,7 @@ public class AccountControllerTest {
 
     @Before
     public void init() {
-        accountService.saveAccount("Asd Qwe", "asdqwe", "qwerty123", "aqwe");
+        accountService.saveAccount(new Account("Asd Qwe", "asdqwe", "qwerty123", "aqwe"));
     }
 
     @Test
@@ -59,10 +61,27 @@ public class AccountControllerTest {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection());
 
+        assertEquals(2, accountRepository.findAll().size());
         assertNotNull(accountService.getAccountByUrlString("Neyous"));
     }
 
     @Test
+    public void invalidAccountIsNotRegistered() throws Exception {
+        mockMvc.perform(
+                post("/register")
+                        .param("name","N")
+                        .param("username", "Neyous")
+                        .param("password", "qwerty123")
+                        .param("urlString", "Neyous"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertEquals(1, accountRepository.findAll().size());
+    }
+
+    @Test
+    @WithMockUser(username = "mocky")
+    @Transactional
     public void accountPageExists() throws Exception {
         MvcResult res = mockMvc.perform(
                 get("/users/aqwe"))
@@ -71,6 +90,7 @@ public class AccountControllerTest {
                 .andReturn();
 
         Account account = (Account) res.getModelAndView().getModel().get("account");
+
 
         assertEquals("asdqwe", account.getUsername());
     }

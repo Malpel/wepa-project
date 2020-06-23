@@ -16,8 +16,17 @@ public class AccountService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Account saveAccount(String name, String username, String password, String urlString) {
-        return accountRepository.save(new Account(name, username, passwordEncoder.encode(password), urlString));
+    public boolean uniqueUsername(String username) {
+        return accountRepository.findByUsername(username) == null;
+    }
+
+    public boolean uniqueUrlString(String urlString) {
+        return accountRepository.findByUrlString(urlString) == null;
+    }
+
+    public Account saveAccount(Account account) {
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        return accountRepository.save(account);
     }
 
     public Account getAccountByUrlString(String urlString) {
