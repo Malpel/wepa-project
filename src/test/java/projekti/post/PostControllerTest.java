@@ -11,10 +11,17 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.account.Account;
 import projekti.account.AccountRepository;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser("m_nem")
 public class PostControllerTest {
 
     @Autowired
@@ -36,6 +44,7 @@ public class PostControllerTest {
     private Account one;
     private Account two;
     private Post post;
+    private String content = "Carthago delenda est";
 
     @Before
     public void init() {
@@ -50,16 +59,64 @@ public class PostControllerTest {
         accountRepository.deleteAll();
     }
 
-    /*
+
     @Test
-    @WithMockUser("m_nem")
     public void postsPageStatusOk() throws Exception {
-        mockMvc.perform(
+        MvcResult res = mockMvc.perform(
                 get("/posts"))
                 .andExpect(status().isOk())
-                .andExpect(model().attributeExists("posts"))
+                .andExpect(model().attributeExists("posts", "account"))
                 .andReturn();
+
+        List<Post> found = (List<Post>) res.getModelAndView().getModel().get("posts");
+
+        assertEquals(post.getContent(), found.get(0).getContent());
     }
-*/
+
+    @Test
+    public void postingWorks() throws Exception {
+        mockMvc.perform(
+                post("/posts/new")
+                .param("content", content))
+                .andExpect(status().is3xxRedirection());
+
+        assertEquals(content, postRepository.findAll().get(1).getContent());
+    }
+
+    @Test
+    @Transactional
+    public void commentingWorks() throws Exception {
+        mockMvc.perform(
+                post("/posts/" + post.getId() + "/comment")
+                .param("content", content))
+                .andExpect(status().is3xxRedirection());
+
+        Post comment = postRepository.findAll().get(1);
+
+        assertTrue(comment.isComment());
+        assertEquals(content, comment.getContent());
+
+        MvcResult res = mockMvc.perform(get("/posts")).andReturn();
+
+        List<Post> posts = (List<Post>) res.getModelAndView().getModel().get("posts");
+        Post commentOnPage = posts.get(0).getComments().get(0);
+
+        assertEquals(content, commentOnPage.getContent());
+    }
+
+    @Test
+    @WithMockUser("huker")
+    @Transactional
+    public void likingWorks() throws Exception {
+        mockMvc.perform(
+                post("/posts/" + post.getId() + "/like"))
+                .andExpect(status().is3xxRedirection());
+
+        List<Account> peopleWhoLiked = postRepository.getOne(post.getId()).getLiked();
+
+        assertEquals(1, peopleWhoLiked.size());
+        assertEquals(two, peopleWhoLiked.get(0));
+    }
+
 
 }

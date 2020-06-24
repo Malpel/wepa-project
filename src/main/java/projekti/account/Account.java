@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @NamedEntityGraph(name = "Account.foAndConnectionsAndSkills", attributeNodes = {
         @NamedAttributeNode("connections"),
         @NamedAttributeNode("fo")
@@ -19,7 +20,8 @@ import java.util.List;
 @Entity
 @RequiredArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Account extends AbstractPersistable<Long> {
 
     @NotEmpty

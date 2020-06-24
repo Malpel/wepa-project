@@ -91,7 +91,6 @@ public class AccountControllerTest {
 
         Account account = (Account) res.getModelAndView().getModel().get("account");
 
-
         assertEquals("asdqwe", account.getUsername());
     }
 
