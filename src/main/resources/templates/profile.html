@@ -17,11 +17,7 @@
 
         <div th:if="${#authentication.getPrincipal().getUsername().equals(account.username)}">
             <h5>Change profile picture</h5>
-            <form th:action="@{/users/{urlString}/pics(urlString=${account.urlString})}"
-                  method="POST" enctype="multipart/form-data">
-                <input type="file" name="file" />
-                <input type="submit" value="Send!"/>
-            </form>
+            <h5>Could not get working with Heroku</h5>
         </div>
     </div>
 

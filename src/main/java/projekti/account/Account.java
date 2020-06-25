@@ -46,8 +46,10 @@ public class Account extends AbstractPersistable<Long> {
     @Column(unique = true)
     private String urlString;
 
+    /*
     @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     private FileObject fo;
+     */
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Account> connections = new ArrayList<>();
