@@ -34,7 +34,6 @@ public class Post extends AbstractPersistable<Long> {
     private Timestamp timestamp;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @OrderBy("timestamp DESC")
     private List<Post> comments = new ArrayList<>();
 
     @NonNull

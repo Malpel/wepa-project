@@ -1,4 +1,4 @@
-package projekti;
+package projekti.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +34,8 @@ public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .antMatchers("/").permitAll()
                 .antMatchers("/register").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin().permitAll()
-                .and().logout().permitAll();
+                .and().formLogin().successForwardUrl("/profile").permitAll()
+                .and().logout().logoutSuccessUrl("/").permitAll();
     }
 
     @Autowired

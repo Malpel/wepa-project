@@ -33,12 +33,14 @@ public class ConnectionServiceTest {
 
     private Account first;
     private Account second;
+    private Account third;
     private Connection connection;
 
     @Before
     public void init() {
         first = accountService.saveAccount(new Account("Iwas Hierbevor", "b4u", "already", "exists"));
         second = accountService.saveAccount(new Account("Sec Ond", "tokand", "2wsx", "tokand"));
+        third = accountService.saveAccount(new Account("The Third", "kolmard", "3edc", "kolmard"));
         connection = connectionRepository.save(new Connection(first, second, false));
     }
 
@@ -50,10 +52,10 @@ public class ConnectionServiceTest {
 
     @Test
     public void newRequestIsSaved() {
-        Connection connection = connectionService.requestConnection(first, second);
-        Connection c = connectionRepository.findAll().get(0);
-        assertEquals(connection.getSender().getUsername(), c.getSender().getUsername());
-        assertEquals(connection.getReceiver().getUsername(), c.getReceiver().getUsername());
+        Connection newConnection = connectionService.requestConnection(first, third);
+        Connection c = connectionRepository.findAll().get(1);
+        assertEquals(newConnection.getSender().getUsername(), c.getSender().getUsername());
+        assertEquals(newConnection.getReceiver().getUsername(), c.getReceiver().getUsername());
         assertFalse(c.isAccepted());
     }
 
@@ -96,6 +98,18 @@ public class ConnectionServiceTest {
     public void disconnectRemovesConnection() {
         connectionService.disconnect(second, first);
         assertTrue(connectionRepository.findAll().isEmpty());
+    }
+
+    @Test
+    public void userCannotConnectWithThemself() {
+        Connection nullConnection = connectionService.requestConnection(first, first);
+        assertNull(nullConnection);
+        assertEquals(1, connectionRepository.findAll().size());
+    }
+
+    @Test
+    public void noDuplicateRequests() {
+        assertTrue(connectionService.existingRequest(first, second));
     }
 
 }

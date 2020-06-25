@@ -44,8 +44,6 @@ public class PostServiceTest {
         account.getConnections().add(huker);
         huker.getConnections().add(account);
 
-        // change these
-
         accountRepository.save(account);
         accountRepository.save(huker);
 
@@ -82,11 +80,13 @@ public class PostServiceTest {
     @Test
     @Transactional
     public void commentsAreSaved() {
-        postService.saveComment("In vino veritas", huker, post.getId());
+        postService.saveComment("In vino veritas", account, post.getId());
 
-        assertEquals(1, post.getComments().size());
-        assertEquals("In vino veritas", post.getComments().get(0).getContent());
-        assertTrue(post.getComments().get(0).isComment());
+        List<Post> posts = postRepository.findAll();
+
+        assertEquals(2, posts.size());
+        assertEquals("In vino veritas", posts.get(0).getComments().get(0).getContent());
+        assertTrue(posts.get(0).getComments().get(0).isComment());
     }
 
     @Test

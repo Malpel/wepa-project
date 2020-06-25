@@ -16,4 +16,7 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
     @Transactional
     @Query(value = "DELETE FROM CONNECTION WHERE (SENDER_ID = ?1 AND RECEIVER_ID = ?2) OR (SENDER_ID = ?2 AND RECEIVER_ID = ?1)", nativeQuery = true)
     void deleteBySenderAndReceiver(Account one, Account two);
+
+    @Query(value = "SELECT * FROM CONNECTION WHERE (SENDER_ID = ?1 AND RECEIVER_ID = ?2) OR (SENDER_ID = ?2 AND RECEIVER_ID = ?1)", nativeQuery = true)
+    Connection findBySenderAndReceiver(Account sender, Account receiver);
 }

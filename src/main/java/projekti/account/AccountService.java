@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -33,8 +34,8 @@ public class AccountService {
         return accountRepository.findByUrlString(urlString);
     }
 
-    public Account searchByName(String name) {
-        return accountRepository.findByName(name);
+    public List<Account> searchByName(String name) {
+        return accountRepository.findByNameContainingIgnoreCase(name);
     }
 
     public Account findByUsername(String username) {

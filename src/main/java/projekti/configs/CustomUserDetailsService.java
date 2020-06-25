@@ -1,4 +1,4 @@
-package projekti;
+package projekti.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByUsername(username);
+
         if (account == null) {
             throw new UsernameNotFoundException("User " + username + " does not exist");
         }

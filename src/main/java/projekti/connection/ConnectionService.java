@@ -22,6 +22,13 @@ public class ConnectionService {
     public Connection requestConnection(Account sender, Account receiver) {
         Connection connection = new Connection();
 
+        if (sender.equals(receiver) || existingRequest(sender, receiver)) {
+            System.out.println("***********************");
+            System.out.println("SUPER DUPLICATE OR SOMINH");
+            System.out.println("***********************");
+            return null;
+        }
+
         connection.setSender(sender);
         connection.setReceiver(receiver);
         connection.setAccepted(false);
@@ -65,6 +72,10 @@ public class ConnectionService {
             accountService.removeFriend(one, two);
             connectionRepository.deleteBySenderAndReceiver(one, two);
         }
+    }
+
+    public boolean existingRequest(Account sender, Account receiver) {
+        return connectionRepository.findBySenderAndReceiver(sender, receiver) != null;
     }
 
     private String getUser() {

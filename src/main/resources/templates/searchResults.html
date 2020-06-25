@@ -2,22 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Profile</title>
+    <title>Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
 
-<h1>Search results for "<span th:text="${name}"></span>"</h1>
+<div th:replace="fragments/layout :: header(username=${user})"></div>
 
-<div>
-    <img th:src="@{/users/{id}/pics(id=${account.id})}" width="5%"/>
-    <a th:href="@{/users/{urlString}(urlString=${account.urlString})}" th:text="${account.name}"></a>
-    <form th:action="@{/users/{id}/connect(id=${account.id})}" method="POST" >
-        <input type="submit" value="Connect" name=""/>
-    </form>
-
+<div class="container">
+    <h1>Search results for "<span th:text="${name}"></span>"</h1>
+    <div th:each="user : ${accounts}">
+        <img th:src="@{/users/{id}/pics(id=${user.id})}" width="5%" class="img-thumbnail"/>
+        <a th:href="@{/users/{urlString}(urlString=${user.urlString})}" th:text="${user.name}"></a>
+        <form th:action="@{/users/{id}/connect(id=${user.id})}" method="POST"
+            th:if="${not #authentication.getPrincipal().getUsername().equals(user.username)}">
+            <input type="submit" value="Connect" name=""/>
+        </form>
+    </div>
 </div>
-
-
 
 </body>
 </html>

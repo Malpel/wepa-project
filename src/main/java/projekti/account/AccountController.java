@@ -2,6 +2,7 @@ package projekti.account;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -57,24 +58,37 @@ public class AccountController {
      public String getProfile(Model model, @PathVariable String urlString) {
         Account account = accountService.getAccountByUrlString(urlString);
         List<Connection> requests = connectionService.getRequests(account);
+
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        model.addAttribute("user", user);
         model.addAttribute("account", account);
         model.addAttribute("requests", requests);
+
         return "profile";
     }
 
-    // change search maybe
     @Secured("USER")
     @PostMapping("/users/search")
     public String searchUsers(Model model, @RequestParam String name) {
-        Account account = accountService.searchByName(name);
+        List<Account> res = accountService.searchByName(name);
 
-        if (account == null) {
-            System.out.println("Nothing found: " + name);
+        if (res == null || res.isEmpty()) {
+            System.out.println("Nothing found with: \"" + name + "\"");
         }
 
-        model.addAttribute("account", account);
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        model.addAttribute("user", user);
+        model.addAttribute("accounts", res);
         model.addAttribute("name", name);
 
         return "searchResults";
     }
+
+    @RequestMapping("/profile")
+    public String getProfilePage() {
+        Account account = accountService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        return "redirect:/users/" + account.getUrlString();
+    }
+
 }

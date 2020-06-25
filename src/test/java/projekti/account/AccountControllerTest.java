@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,6 +43,11 @@ public class AccountControllerTest {
     @Before
     public void init() {
         accountService.saveAccount(new Account("Asd Qwe", "asdqwe", "qwerty123", "aqwe"));
+    }
+
+    @After
+    public void tearDown() {
+        accountRepository.deleteAll();
     }
 
     @Test
@@ -94,8 +101,20 @@ public class AccountControllerTest {
         assertEquals("asdqwe", account.getUsername());
     }
 
-    @After
-    public void tearDown() {
-        accountRepository.deleteAll();
+    @Test
+    @WithMockUser("asdqwe")
+    @Transactional
+    public void searchingWorks() throws Exception {
+        MvcResult res = mockMvc.perform(
+                post("/users/search")
+                .param("name", "asd"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<Account> accounts = (List<Account>) res.getModelAndView().getModel().get("accounts");
+
+        assertEquals("Asd Qwe", accounts.get(0).getName());
+        assertEquals("asdqwe", accounts.get(0).getUsername());
     }
 }

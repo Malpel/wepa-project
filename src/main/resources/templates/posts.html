@@ -8,30 +8,31 @@
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header(username=${account.username}, urlString=${account.urlString})"></div>
+<div th:replace="fragments/layout :: header(username=${user})"></div>
 
-<div class="jumbotron">
+<div class="container">
     <h2>Posts</h2>
 
     <div>
         <h3>Make a new post</h3>
         <form th:action="@{/posts/new}" method="POST">
-            <input type="text" name="content"/>
+            <textarea class="form-control" name="content" rows="7"></textarea>
             <input type="submit" value="Send"/>
         </form>
     </div>
 
+    <br/>
     <div>
-        <h3>Posts from your network</h3>
+        <h3>Posts from your connections</h3>
         <div th:each="post : ${posts}">
-            <table>
+            <hr/>
+            <table class="media">
                 <tr>
-                    <td th:text="${post.liked.size()}"></td>
-                    <td th:text="${post.createdBy.name}"></td>
-                    <td th:text="${post.timestamp}"></td>
+                    <th scope="col" th:text="${post.createdBy.name}" ></th>
+                    <th scope="col" th:text="${post.timestamp}"></th>
                 </tr>
-                <tr >
-                    <td th:text="${post.content}"></td>
+                <tr>
+                    <th th:text="${post.content}"></th>
                 </tr>
                 <tr>
                     <td>
@@ -39,11 +40,14 @@
                             <input type="submit" value="like"/>
                         </form>
                     </td>
+                    <td th:text="${post.liked.size()}"></td>
                 </tr>
             </table>
-
+            <br/>
+            <hr/>
             <h4>Comments: </h4>
             <div th:each="comment : ${post.comments}">
+                <hr/>
                 <table>
                     <tr>
                         <td th:text="${comment.createdBy.name}"></td>

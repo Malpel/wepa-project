@@ -30,6 +30,7 @@ public class PostController {
         Account account = getUser();
         List<Post> posts = postService.getPosts(account);
 
+        model.addAttribute("user", account.getUsername());
         model.addAttribute("posts", posts);
         model.addAttribute("account", account);
 

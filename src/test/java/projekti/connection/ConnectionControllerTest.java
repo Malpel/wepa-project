@@ -39,12 +39,14 @@ public class ConnectionControllerTest {
 
     private Account account;
     private Account two;
+    private Account three;
     private Connection connection;
 
     @Before
     public void init() {
         account = accountRepository.save(new Account("Maydup Nem", "m_nem", "asdqwe123", "mnem"));
         two = accountRepository.save(new Account("Hugh Kerrs", "huker", "asdqwe123", "huker"));
+        three = accountRepository.save(new Account("Test", "test", "asdqwe123", "test"));
         connection = connectionRepository.save(new Connection(account, two, false));
     }
 
@@ -55,7 +57,7 @@ public class ConnectionControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser("test")
     public void requestsWork() throws Exception {
         mockMvc.perform(
                 post("/users/" + account.getId() + "/connect")

@@ -5,20 +5,43 @@
     <title>Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        #formArea {text-align: center;}
+    </style>
 </head>
 <body>
 
-<h2>New account</h2>
+<div class="container" id="formArea">
+    <div class="jumbotron">
+        <h1>New account</h1>
+    </div>
 
-<form method="POST" th:action="@{/register}">
-    <input type="text" name="name"/>
-    <input type="text" name="username"/>
-    <input type="password" name="password"/>
 
-    <h3>How would you like to be found?</h3>
-    <p>https://localhost:8080/users/<input type="text" name="urlString" placeholder="url end goes here"></p>
-    <input type="submit" value="Add new account!"/>
-</form>
+    <form method="POST" th:action="@{/register}">
+        <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input type="text" name="name" id="nameInput" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label for="usernameInput">Username</label>
+            <input type="text" name="username" id="usernameInput" class="form-control" required/>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <input type="password" name="password" id="passwordInput" class="form-control" required/>
+        </div>
+
+        <h4>How would you like to be found?</h4>
+        <div class="form-group">
+            <label for="url">blingedinn.com/users/</label>
+            <input type="text" name="urlString" placeholder="Your url here" class="form-control" id="url" required>
+        </div>
+
+        <input type="submit" value="Register account!" class="btn btn-success"/>
+        <a class="btn btn-danger" href="/">Cancel</a>
+    </form>
+</div>
+
 
 </body>
 </html>

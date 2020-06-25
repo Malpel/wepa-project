@@ -8,14 +8,14 @@
 </head>
 <body>
 
-<div th:replace="fragments/layout :: header(username=${account.username}, urlString=${account.urlString})"></div>
+<div th:replace="fragments/layout :: header(username=${user})"></div>
 
 <div class="container">
     <div>
         <h1 th:text="${account.name}">user</h1>
         <img th:src="@{/users/{id}/pics(id=${account.id})}" width="15%"/>
 
-        <div>
+        <div th:if="${#authentication.getPrincipal().getUsername().equals(account.username)}">
             <h5>Change profile picture</h5>
             <form th:action="@{/users/{urlString}/pics(urlString=${account.urlString})}"
                   method="POST" enctype="multipart/form-data">
@@ -30,19 +30,33 @@
     <div id="skills">
         <h2>Skills</h2>
         <table class="table">
+            <thead>
             <tr>
-                <td>Skill</td>
-                <td>Compliments</td>
+                <th scope="col">Skill</th>
+                <th scope="col">Compliments</th>
             </tr>
-            <tr th:each="skill : ${account.skills}">
-                <td th:text="${skill.name}"></td>
-                <td th:text="${skill.compliments}"></td>
-                <td th:if="${not #authentication.getPrincipal().getUsername().equals(account.username)}">
-                    <form th:action="@{/users/{urlString}/skills/{skillId}(urlString=${account.urlString}, skillId=${skill.id})}" method="POST">
-                        <input type="submit" value="Compliment"/>
-                    </form>
-                </td>
-            </tr>
+            </thead>
+            <div th:each="skill, iter : ${account.skills}">
+                <tr th:if="${iter.count} <= 3" class="table-primary">
+                    <td th:text="${skill.name}"></td>
+                    <td th:text="${skill.compliments}"></td>
+                    <td th:if="${not #authentication.getPrincipal().getUsername().equals(account.username)}">
+                        <form th:action="@{/users/{urlString}/skills/{skillId}(urlString=${account.urlString}, skillId=${skill.id})}" method="POST">
+                            <input type="submit" value="Compliment"/>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${iter.count} > 3" >
+                    <td th:text="${skill.name}"></td>
+                    <td th:text="${skill.compliments}"></td>
+                    <td th:if="${not #authentication.getPrincipal().getUsername().equals(account.username)}">
+                        <form th:action="@{/users/{urlString}/skills/{skillId}(urlString=${account.urlString}, skillId=${skill.id})}" method="POST">
+                            <input type="submit" value="Compliment"/>
+                        </form>
+                    </td>
+                </tr>
+
+            </div>
         </table>
 
         <div th:if="${#authentication.getPrincipal().getUsername().equals(account.username)}">
@@ -57,7 +71,7 @@
     <br/>
 
     <div>
-        <h2>Freinds</h2>
+        <h2>Connections</h2>
         <div th:each="connection : ${account.connections}">
             <div th:replace="fragments/layout :: friendDiv(friend=${connection}, account=${account})">
             </div>

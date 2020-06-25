@@ -88,19 +88,20 @@ public class PostControllerTest {
     public void commentingWorks() throws Exception {
         mockMvc.perform(
                 post("/posts/" + post.getId() + "/comment")
-                .param("content", content))
+                        .param("content", content))
                 .andExpect(status().is3xxRedirection());
 
-        Post comment = postRepository.findAll().get(1);
+        Post comment = postRepository.findAll().get(0).getComments().get(0);
 
-        assertTrue(comment.isComment());
         assertEquals(content, comment.getContent());
+        assertTrue(comment.isComment());
 
         MvcResult res = mockMvc.perform(get("/posts")).andReturn();
 
         List<Post> posts = (List<Post>) res.getModelAndView().getModel().get("posts");
         Post commentOnPage = posts.get(0).getComments().get(0);
 
+        assertTrue(posts.get(0).getComments().contains(comment));
         assertEquals(content, commentOnPage.getContent());
     }
 
