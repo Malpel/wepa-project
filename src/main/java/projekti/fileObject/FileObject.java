@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import projekti.account.Account;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
 @Data
 public class FileObject extends AbstractPersistable<Long> {
 
-    @Lob
+    @Column(length = 16000000)
     private byte[] content;
 
     @OneToOne

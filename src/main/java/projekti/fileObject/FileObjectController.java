@@ -33,7 +33,6 @@ public class FileObjectController {
 
     @GetMapping(value = "/users/{id}/pics", produces = "image/jpg")
     @ResponseBody
-    @Transactional
     public byte[] getProfilePic(@PathVariable Long id) {
         return fileObjectService.findByAccountId(id).getContent();
     }
