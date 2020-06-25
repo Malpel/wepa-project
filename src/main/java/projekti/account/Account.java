@@ -14,8 +14,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @NamedEntityGraph(name = "Account.foAndConnectionsAndSkills", attributeNodes = {
-        @NamedAttributeNode("connections"),
-        @NamedAttributeNode("fo")
+        @NamedAttributeNode("connections")
 })
 @Entity
 @RequiredArgsConstructor
