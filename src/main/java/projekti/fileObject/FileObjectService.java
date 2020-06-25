@@ -28,6 +28,7 @@ public class FileObjectService {
         return fileObjectRepository.save(fo);
     }
 
+    @Transactional
     public FileObject findByAccountId(Long id) {
         return fileObjectRepository.findByAccountId(id);
     }
